@@ -13,12 +13,15 @@ import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
 
 public class CalcAverages {
-	private static int[][] averages;
+	private int imgCount;
+	private int threadCount;
+	private int[][] averages;
 
-	public CalcAverages() {
-		
+	public CalcAverages(int imgCount, int threadCount) {
+		this.imgCount = imgCount;
+		this.threadCount = threadCount;
 	}
-	
+
 	class CalcAverage implements Runnable {
 		private int imgNum;
 
@@ -55,10 +58,10 @@ public class CalcAverages {
 	public void calcAverages() {
 		long startTime = System.nanoTime();
 
-		averages = new int[Main.IMG_COUNT][3];
-		ExecutorService pool = Executors.newFixedThreadPool(Main.THREAD_COUNT);
+		averages = new int[imgCount][3];
+		ExecutorService pool = Executors.newFixedThreadPool(threadCount);
 
-		for (int i = 0; i < Main.IMG_COUNT; i++) {
+		for (int i = 0; i < imgCount; i++) {
 			Runnable run = new CalcAverage(i);
 			pool.execute(run);
 		}
@@ -73,7 +76,7 @@ public class CalcAverages {
 
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(new File("avgs/avgs.txt")));
-			for (int i = 0; i < Main.IMG_COUNT; i++) {
+			for (int i = 0; i < imgCount; i++) {
 				bw.write(String.format("%d,%d,%d\n", averages[i][0], averages[i][1], averages[i][2]));
 			}
 			bw.close();

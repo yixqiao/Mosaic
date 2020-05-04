@@ -21,13 +21,22 @@ public class GenImage {
 	private int NEW_CHUNK_SIZE = CHUNK_SIZE * NEW_IMG_SCALE;
 
 	private String imgPath;
+	private String outPath;
+	private String avgsPath;
+	private int imgCount;
+	private int threadCount;
+
 	private BufferedImage image = null;
 	private BufferedImage newImage = null;
 
-	public GenImage(String imgPath) {
+	public GenImage(String imgPath, String outPath, String avgsPath, int threadCount) {
+		this.threadCount = threadCount;
 		this.imgPath = imgPath;
+		this.outPath = outPath;
+		this.avgsPath = avgsPath;
+
 		try {
-			image = ImageIO.read(new File(String.format("img_in/%s.jpg", imgPath)));
+			image = ImageIO.read(new File(this.imgPath));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -60,7 +69,7 @@ public class GenImage {
 
 			BufferedReader br = null;
 			try {
-				br = new BufferedReader(new FileReader(new File("avgs/avgs.txt")));
+				br = new BufferedReader(new FileReader(new File(avgsPath)));
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -69,7 +78,7 @@ public class GenImage {
 				while (!br.ready()) {
 				}
 
-				for (int i = 0; i < Main.IMG_COUNT; i++) {
+				for (int i = 0; i < imgCount; i++) {
 					String[] rgb = br.readLine().split(",");
 					long diff = 0;
 					diff += (r - Integer.parseInt(rgb[0])) * (r - Integer.parseInt(rgb[0]));
@@ -111,7 +120,7 @@ public class GenImage {
 		newImage = new BufferedImage(image.getWidth() * NEW_IMG_SCALE, image.getHeight() * NEW_IMG_SCALE,
 				image.getType()); // Create new image
 
-		ExecutorService pool = Executors.newFixedThreadPool(Main.THREAD_COUNT);
+		ExecutorService pool = Executors.newFixedThreadPool(threadCount);
 
 		for (int xc = 0; xc < image.getWidth() / CHUNK_SIZE; xc++) {
 			for (int yc = 0; yc < image.getHeight() / CHUNK_SIZE; yc++) {
@@ -129,7 +138,7 @@ public class GenImage {
 		}
 
 		try {
-			ImageIO.write(newImage, "jpg", new File(String.format("img_out/%s.jpg", imgPath)));
+			ImageIO.write(newImage, "jpg", new File(outPath));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -137,4 +146,23 @@ public class GenImage {
 		System.out.println(String.format("Finished building image (%.1f seconds).",
 				(double) (System.nanoTime() - startTime) / 1000000000));
 	}
+
+	public void findAvgsNum(boolean verbose) {
+		imgCount = 0;
+
+		BufferedReader br = null;
+		try {
+			br = new BufferedReader(new FileReader(new File(avgsPath)));
+			while (!br.ready()) {
+			}
+			while (br.readLine() != null)
+				imgCount++;
+			br.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		System.out.println("Averages file contains " + imgCount + " averages.");
+	}
+
 }
