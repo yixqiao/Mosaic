@@ -5,7 +5,7 @@
 * Made using Java (AWT for images)
 
 ## Example
-![Image example](img_out/lake.jpg)
+![Image example](sample.jpg)
 * Image made using faces from CelebA dataset
 
 ## Usage
