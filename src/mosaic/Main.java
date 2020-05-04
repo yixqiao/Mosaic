@@ -20,22 +20,26 @@ public class Main {
 
 	public static void main(String[] args) {
 		calcAverages();
-		genImage("lake");
+		// genImage("lake");
 	}
 
 	public static void genImage(String imgName) {
 		final int CHUNK_SIZE = 10;
 		final int NEW_CHUNK_SIZE = 40;
-		BufferedImage image = null;
+		long startTime = System.nanoTime();
+
+		BufferedImage image = null; // Read image
 		try {
 			image = ImageIO.read(new File(String.format("img_in/%s.jpg", imgName)));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 		BufferedImage newImage = new BufferedImage(image.getWidth() * NEW_CHUNK_SIZE / CHUNK_SIZE,
-				image.getHeight() * NEW_CHUNK_SIZE / CHUNK_SIZE, image.getType());
+				image.getHeight() * NEW_CHUNK_SIZE / CHUNK_SIZE, image.getType()); // Create new image
+		
 		for (int xc = 0; xc < image.getWidth() / CHUNK_SIZE; xc++) {
-			if (xc % (image.getWidth() / CHUNK_SIZE / LOG_TIMES) == 0)
+			if (xc % (image.getWidth() / CHUNK_SIZE / LOG_TIMES) == 0) // Log progress
 				System.out.println(String.format("%.0f%%", (double) xc / (image.getWidth() / CHUNK_SIZE) * 100));
 
 			for (int yc = 0; yc < image.getHeight() / CHUNK_SIZE; yc++) {
@@ -106,9 +110,13 @@ public class Main {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		System.out.println(String.format("Finished building image (%.1f seconds).",
+				(double) (System.nanoTime() - startTime) / 1000000000));
 	}
 
 	public static void calcAverages() {
+		long startTime = System.nanoTime();
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(new File("avgs/avgs.txt")));
 			for (int i = 0; i < IMG_COUNT; i++) {
@@ -133,8 +141,8 @@ public class Main {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		for (int i = 0; i < IMG_COUNT; i++) {
 
-		}
+		System.out.println(String.format("Finished calculating averages (%.1f seconds).",
+				(double) (System.nanoTime() - startTime) / 1000000000));
 	}
 }
