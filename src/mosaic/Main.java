@@ -26,12 +26,13 @@ public class Main {
 
 	public static void main(String[] args) {
 		calcAverages();
-		// genImage("lake");
+		genImage("lake");
 	}
 
 	public static void genImage(String imgName) {
 		final int CHUNK_SIZE = 10;
-		final int NEW_CHUNK_SIZE = 40;
+		final int NEW_IMG_SCALE = 4;
+		final int NEW_CHUNK_SIZE = CHUNK_SIZE * NEW_IMG_SCALE;
 		long startTime = System.nanoTime();
 
 		BufferedImage image = null; // Read image
@@ -41,8 +42,8 @@ public class Main {
 			e.printStackTrace();
 		}
 
-		BufferedImage newImage = new BufferedImage(image.getWidth() * NEW_CHUNK_SIZE / CHUNK_SIZE,
-				image.getHeight() * NEW_CHUNK_SIZE / CHUNK_SIZE, image.getType()); // Create new image
+		BufferedImage newImage = new BufferedImage(image.getWidth() * NEW_IMG_SCALE, image.getHeight() * NEW_IMG_SCALE,
+				image.getType()); // Create new image
 
 		for (int xc = 0; xc < image.getWidth() / CHUNK_SIZE; xc++) {
 			if (xc % (image.getWidth() / CHUNK_SIZE / LOG_TIMES) == 0) // Log progress
