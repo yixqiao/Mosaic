@@ -20,7 +20,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		calcAverages();
-		// genImage("lake");
+		genImage("lake");
 	}
 
 	public static void genImage(String imgName) {
@@ -34,10 +34,10 @@ public class Main {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		BufferedImage newImage = new BufferedImage(image.getWidth() * NEW_CHUNK_SIZE / CHUNK_SIZE,
 				image.getHeight() * NEW_CHUNK_SIZE / CHUNK_SIZE, image.getType()); // Create new image
-		
+
 		for (int xc = 0; xc < image.getWidth() / CHUNK_SIZE; xc++) {
 			if (xc % (image.getWidth() / CHUNK_SIZE / LOG_TIMES) == 0) // Log progress
 				System.out.println(String.format("%.0f%%", (double) xc / (image.getWidth() / CHUNK_SIZE) * 100));
@@ -56,7 +56,8 @@ public class Main {
 				r /= CHUNK_SIZE * CHUNK_SIZE;
 				g /= CHUNK_SIZE * CHUNK_SIZE;
 				b /= CHUNK_SIZE * CHUNK_SIZE;
-				int minV = 1000000000, minI = -1;
+				long minV = (long) 1e9;
+				int minI = -1;
 
 				BufferedReader br = null;
 				try {
@@ -71,10 +72,10 @@ public class Main {
 
 					for (int i = 0; i < IMG_COUNT; i++) {
 						String[] rgb = br.readLine().split(",");
-						int diff = 0;
-						diff += Math.abs(r - Integer.parseInt(rgb[0]));
-						diff += Math.abs(g - Integer.parseInt(rgb[1]));
-						diff += Math.abs(b - Integer.parseInt(rgb[2]));
+						long diff = 0;
+						diff += (r - Integer.parseInt(rgb[0])) * (r - Integer.parseInt(rgb[0]));
+						diff += (g - Integer.parseInt(rgb[1])) * (g - Integer.parseInt(rgb[1]));
+						diff += (b - Integer.parseInt(rgb[2])) * (b - Integer.parseInt(rgb[2]));
 						if (diff < minV) {
 							minV = diff;
 							minI = i;

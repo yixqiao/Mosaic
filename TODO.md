@@ -2,4 +2,4 @@
  - [ ] Use multiple CPU threads
  - [ ] Make a command-line application to run
  - [ ] Arbitrary sizes for image and chunk
- - [ ] Make image choosing based on Euclidean distance
+ - [X] Make image choosing based on Euclidean distance
