@@ -1,2 +1,3 @@
-img_build/*
 /bin/
+img_build/*
+avgs/avgs.txt
