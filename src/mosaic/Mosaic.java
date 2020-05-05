@@ -1,72 +1,23 @@
 package mosaic;
 
-import org.apache.commons.cli.*;
-
 public class Mosaic {
-	static Options options = new Options();
-	public static final int LOG_TIMES = 10;
-	private static String imgPath;
-	private static String outPath;
-	private static String avgsPath = "avgs/avgs.txt";
-	private static int threadCount = 4;
-
 	public static void main(String[] args) {
-		options.addOption("h", "help", false, "print this message");
-		options.addOption(Option.builder("p").longOpt("path").hasArg().argName("path")
-				.desc("path to input image (required)").build());
-		options.addOption(Option.builder("o").longOpt("output-path").hasArg().argName("path")
-				.desc("path to output built image").build());
-		options.addOption(Option.builder("a").longOpt("averages-path").hasArg().argName("path")
-				.desc("path to file of averages").build());
-		options.addOption("t", "thread-count", true, "thread count for calculating");
-
-		CommandLineParser parser = new DefaultParser();
-		CommandLine cmd = null;
-		try {
-			cmd = parser.parse(options, args);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-
-		if (cmd.hasOption("h")) {
-			printHelp();
+		if (args.length == 0 || !(args[0].equals("averages") || args[0].equals("build"))) {
+			System.out.println("commands:");
+			System.out.println("   averages");
+			System.out.println("   build");
+			System.exit(0);
 		} else {
-			if (cmd.hasOption("p")) {
-				imgPath = cmd.getOptionValue("p");
-			} else {
-				System.err.println("Path to input image is required.");
-				printHelp();
+			String[] newArgs = new String[args.length - 1];
+			for (int i = 0; i < newArgs.length; i++) {
+				newArgs[i] = args[i + 1];
 			}
 
-			if (cmd.hasOption("o")) {
-				outPath = cmd.getOptionValue("o");
-			} else {
-				outPath = "output.jpg";
-				System.out.println("No output specified, defaulting to " + outPath + ".");
+			if (args[0].equals("averages")) {
+				Averages.avgs(newArgs);
+			} else if (args[0].equals("build")) {
+				Gen.gen(newArgs);
 			}
-
-			if (cmd.hasOption("a")) {
-				avgsPath = cmd.getOptionValue("a");
-			} else {
-				System.out.println("Using default averages path at " + avgsPath + ".");
-			}
-
-			if (cmd.hasOption("t")) {
-				threadCount = Integer.parseInt(cmd.getOptionValue("t"));
-			} else {
-				System.out.println("No thread count specified, defaulting to " + threadCount + " threads.");
-			}
-
-			GenImage gi = new GenImage(imgPath, outPath, avgsPath, threadCount);
-			gi.findAvgsNum(false);
-			gi.genImage();
-
 		}
-	}
-
-	private static void printHelp() {
-		HelpFormatter formatter = new HelpFormatter();
-		formatter.printHelp("mosaic", options);
-		System.exit(0);
 	}
 }
