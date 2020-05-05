@@ -1,10 +1,9 @@
 ### TODO:
- - [ ] Parse folder to find all build images (instead of relying on counting system)
  - [ ] Option to only use unique images each time (or each image n maximum times)
  - [ ] Show progress in operation
  - [ ] Exit program on exceptions
- - [ ] Create a target folder or something of the sort for the jar
  - [ ] Make a GUI frontend
+ - [X] Parse folder to find all build images (instead of relying on counting system)
  - [X] More command-line options (average output, chunk size)
  - [X] Arbitrary sizes for image and chunk
  - [X] Make a command-line application to run
