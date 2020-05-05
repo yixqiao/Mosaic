@@ -10,7 +10,11 @@
 
 ## Usage
 1. Clone repository
-2. Make a directory called image_build
-3. Put smaller images to build from inside directory
-4. Run the Java program (it will take in lake.jpg from img_in)
-5. Output will be in img_out
+2. Run `java -jar average.jar -h` to see usage of average generator
+3. Run average.jar (example: `java -jar average.jar -n 1000`)
+4. Run `java -jar mosaic.jar -h` to see usage of mosaic builder
+5. Run mosaic.jar with any input image (example: `java -jar mosaic.jar -p img_in/lake.jpg -o lake_output.jpg`)
+
+## Description
+The program works by finding the average color of each of the images to build from. It then goes through chunks in the input image, finding the image closest in color and adding it in.  
+Average.jar calculates averages, and mosaic.jar builds the mosaic.
