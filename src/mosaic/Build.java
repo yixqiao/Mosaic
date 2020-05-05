@@ -2,12 +2,14 @@ package mosaic;
 
 import org.apache.commons.cli.*;
 
-public class Gen {
+public class Build {
 	static Options options = new Options();
 	public static final int LOG_TIMES = 10;
 	private static String imgPath;
-	private static String outPath;
+	private static String outPath = "output.jpg";
 	private static String avgsPath = "avgs/avgs.txt";
+	private static int chunkSize = 10;
+	private static int newImgScale = 1;
 	private static int threadCount = 4;
 
 	public static void gen(String[] args) {
@@ -18,6 +20,8 @@ public class Gen {
 				.desc("path to output built image").build());
 		options.addOption(Option.builder("a").longOpt("averages-path").hasArg().argName("path")
 				.desc("path to file of averages").build());
+		options.addOption("c", "chunk-size", true, "size of each small image in original image");
+		options.addOption("s", "scale", true, "factor to scale output image by");
 		options.addOption("t", "thread-count", true, "thread count for calculating");
 
 		CommandLineParser parser = new DefaultParser();
@@ -31,35 +35,42 @@ public class Gen {
 		if (cmd.hasOption("h")) {
 			printHelp();
 		} else {
-			if (cmd.hasOption("p")) {
+			if (cmd.hasOption("p"))
 				imgPath = cmd.getOptionValue("p");
-			} else {
+			else {
 				System.err.println("Path to input image is required.");
 				printHelp();
 			}
 
-			if (cmd.hasOption("o")) {
+			if (cmd.hasOption("o"))
 				outPath = cmd.getOptionValue("o");
-			} else {
-				outPath = "output.jpg";
+			else
 				System.out.println("No output specified, defaulting to " + outPath + ".");
-			}
 
-			if (cmd.hasOption("a")) {
+			if (cmd.hasOption("a"))
 				avgsPath = cmd.getOptionValue("a");
-			} else {
+			else
 				System.out.println("No averages path specified, defautling to " + avgsPath + ".");
-			}
+
+			if (cmd.hasOption("c"))
+				chunkSize = Integer.parseInt(cmd.getOptionValue("c"));
+			else
+				System.out.println("No chunk size specified, defaulting to " + chunkSize + " pixels.");
+
+			if (cmd.hasOption("s"))
+				newImgScale = Integer.parseInt(cmd.getOptionValue("s"));
+			else
+				System.out.println("No scale factor specified, defaulting to scale of " + newImgScale + ".");
 
 			if (cmd.hasOption("t")) {
 				threadCount = Integer.parseInt(cmd.getOptionValue("t"));
 			} else {
 				System.out.println("No thread count specified, defaulting to " + threadCount + " threads.");
 			}
-			
+
 			System.out.println();
 
-			GenImage gi = new GenImage(imgPath, outPath, avgsPath, threadCount);
+			BuildImage gi = new BuildImage(imgPath, outPath, avgsPath, chunkSize, newImgScale, threadCount);
 			gi.findAvgsNum(false);
 			gi.genImage();
 

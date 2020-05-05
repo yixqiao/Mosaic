@@ -8,7 +8,7 @@
 ![Image example](sample.jpg)
 * Image made using faces from CelebA dataset
 
-## Usage
+## Usage (OUTDATED)
 1. Clone repository
 2. Run `java -jar average.jar -h` to see usage of average generator
 3. Run average.jar (example: `java -jar average.jar -n 1000`)

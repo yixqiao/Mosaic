@@ -16,7 +16,7 @@ public class Mosaic {
 			if (args[0].equals("averages")) {
 				Averages.avgs(newArgs);
 			} else if (args[0].equals("build")) {
-				Gen.gen(newArgs);
+				Build.gen(newArgs);
 			}
 		}
 	}
