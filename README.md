@@ -15,6 +15,6 @@
 4. Run `java -jar mosaic.jar -h` to see usage of mosaic builder
 5. Run mosaic.jar with any input image (example: `java -jar mosaic.jar -p img_in/lake.jpg -o lake_output.jpg`)
 
-## Description
+## Details
 The program works by finding the average color of each of the images to build from. It then goes through chunks in the input image, finding the image closest in color and adding it in.  
 Average.jar calculates averages, and mosaic.jar builds the mosaic.
