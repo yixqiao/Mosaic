@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -25,6 +26,8 @@ public class BuildImage {
 	private String avgsPath;
 	private int imgCount;
 	private int threadCount;
+
+	private ArrayList<String[]> rgbp = new ArrayList<String[]>();
 
 	private BufferedImage image = null;
 	private BufferedImage newImage = null;
@@ -71,35 +74,21 @@ public class BuildImage {
 			long minV = (long) 1e9;
 			int minI = -1;
 
-			BufferedReader br = null;
-			try {
-				br = new BufferedReader(new FileReader(new File(avgsPath)));
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-
-			try {
-				while (!br.ready()) {
+			for (int i = 0; i < imgCount; i++) {
+				String[] curRGB = rgbp.get(i);
+				long diff = 0;
+				diff += (r - Integer.parseInt(curRGB[0])) * (r - Integer.parseInt(curRGB[0]));
+				diff += (g - Integer.parseInt(curRGB[1])) * (g - Integer.parseInt(curRGB[1]));
+				diff += (b - Integer.parseInt(curRGB[2])) * (b - Integer.parseInt(curRGB[2]));
+				if (diff < minV) {
+					minV = diff;
+					minI = i;
 				}
-
-				for (int i = 0; i < imgCount; i++) {
-					String[] rgb = br.readLine().split(",");
-					long diff = 0;
-					diff += (r - Integer.parseInt(rgb[0])) * (r - Integer.parseInt(rgb[0]));
-					diff += (g - Integer.parseInt(rgb[1])) * (g - Integer.parseInt(rgb[1]));
-					diff += (b - Integer.parseInt(rgb[2])) * (b - Integer.parseInt(rgb[2]));
-					if (diff < minV) {
-						minV = diff;
-						minI = i;
-					}
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
 
 			BufferedImage curImg = null;
 			try {
-				curImg = ImageIO.read(new File(String.format("img_build/%06d.jpg", minI + 1)));
+				curImg = ImageIO.read(new File(rgbp.get(minI)[3]));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -121,9 +110,7 @@ public class BuildImage {
 	public void genImage() {
 		long startTime = System.nanoTime();
 
-		newImage = new BufferedImage(image.getWidth() * newImgScale, image.getHeight() * newImgScale, image.getType()); // Create
-																														// new
-																														// image
+		newImage = new BufferedImage(image.getWidth() * newImgScale, image.getHeight() * newImgScale, image.getType());
 
 		ExecutorService pool = Executors.newFixedThreadPool(threadCount);
 
@@ -152,7 +139,7 @@ public class BuildImage {
 				(double) (System.nanoTime() - startTime) / 1000000000));
 	}
 
-	public void findAvgsNum(boolean verbose) {
+	public void readAvgs(boolean verbose) {
 		imgCount = 0;
 
 		BufferedReader br = null;
@@ -160,8 +147,14 @@ public class BuildImage {
 			br = new BufferedReader(new FileReader(new File(avgsPath)));
 			while (!br.ready()) {
 			}
-			while (br.readLine() != null)
+			while (true) {
+				String s = br.readLine();
+				if (s == null)
+					break;
+				rgbp.add(s.split(","));
+
 				imgCount++;
+			}
 			br.close();
 		} catch (IOException e) {
 			e.printStackTrace();

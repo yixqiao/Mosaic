@@ -14,7 +14,7 @@ public class Build {
 
 	public static void gen(String[] args) {
 		options.addOption("h", "help", false, "print this message");
-		options.addOption(Option.builder("p").longOpt("path").hasArg().argName("path")
+		options.addOption(Option.builder("p").longOpt("image-path").hasArg().argName("path")
 				.desc("path to input image (required)").build());
 		options.addOption(Option.builder("o").longOpt("output-path").hasArg().argName("path")
 				.desc("path to output built image").build());
@@ -71,7 +71,7 @@ public class Build {
 			System.out.println();
 
 			BuildImage gi = new BuildImage(imgPath, outPath, avgsPath, chunkSize, newImgScale, threadCount);
-			gi.findAvgsNum(false);
+			gi.readAvgs(false);
 			gi.genImage();
 
 		}

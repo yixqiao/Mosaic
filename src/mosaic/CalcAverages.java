@@ -6,6 +6,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -13,12 +14,14 @@ import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
 
 public class CalcAverages {
+	private ArrayList<String> paths;
 	private int imgCount;
 	private int threadCount;
 	private int[][] averages;
 
-	public CalcAverages(int imgCount, int threadCount) {
-		this.imgCount = imgCount;
+	public CalcAverages(ArrayList<String> paths, int imgCount, int threadCount) {
+		this.paths = paths;
+		this.imgCount = (imgCount == 0 ? paths.size() : imgCount);
 		this.threadCount = threadCount;
 	}
 
@@ -32,7 +35,7 @@ public class CalcAverages {
 		public void run() {
 			BufferedImage image = null;
 			try {
-				image = ImageIO.read(new File(String.format("img_build/%06d.jpg", imgNum + 1)));
+				image = ImageIO.read(new File(paths.get(imgNum)));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -77,7 +80,7 @@ public class CalcAverages {
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(new File("avgs/avgs.txt")));
 			for (int i = 0; i < imgCount; i++) {
-				bw.write(String.format("%d,%d,%d\n", averages[i][0], averages[i][1], averages[i][2]));
+				bw.write(String.format("%d,%d,%d,%s\n", averages[i][0], averages[i][1], averages[i][2], paths.get(i)));
 			}
 			bw.close();
 		} catch (IOException e) {
