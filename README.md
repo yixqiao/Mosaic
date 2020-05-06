@@ -1,5 +1,7 @@
 # Mosaic program
 
+INFO: Active development is on [image-mosaic](https://github.com/yixqiao/image-mosaic). Currently, this program is being developed for the sole purpose of being used in the Electron app.
+
 ## Description
 * Create an image mosaic composed of smaller images
 * Made using Java (AWT for images)
