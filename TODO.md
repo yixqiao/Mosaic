@@ -1,4 +1,5 @@
 ### TODO:
+ - [ ] Update README
  - [ ] Option to only use unique images each time (or each image n maximum times)
  - [ ] Show progress in operation
  - [ ] Exit program on exceptions
