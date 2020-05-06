@@ -1,0 +1,23 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+application {
+    mainClassName = "Mosaic"
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile 'commons-cli:commons-cli:1.4'
+    // https://mvnrepository.com/artifact/commons-cli/commons-cli
+    // compile group: 'commons-cli', name: 'commons-cli', version: '1.2'
+}
