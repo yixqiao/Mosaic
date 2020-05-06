@@ -13,12 +13,14 @@ import javax.imageio.ImageIO;
 
 public class CalcAverages {
 	private ArrayList<String> paths;
+	private String outPath;
 	private int imgCount;
 	private int threadCount;
 	private int[][] averages;
 
-	public CalcAverages(ArrayList<String> paths, int imgCount, int threadCount) {
+	public CalcAverages(ArrayList<String> paths, String outPath, int imgCount, int threadCount) {
 		this.paths = paths;
+		this.outPath = outPath;
 		this.imgCount = (imgCount == 0 ? paths.size() : imgCount);
 		this.threadCount = threadCount;
 	}
@@ -76,7 +78,7 @@ public class CalcAverages {
 		}
 
 		try {
-			BufferedWriter bw = new BufferedWriter(new FileWriter(new File("avgs/avgs.txt")));
+			BufferedWriter bw = new BufferedWriter(new FileWriter(new File(outPath)));
 			for (int i = 0; i < imgCount; i++) {
 				bw.write(String.format("%d,%d,%d,%s\n", averages[i][0], averages[i][1], averages[i][2], paths.get(i)));
 			}

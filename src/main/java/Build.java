@@ -2,7 +2,6 @@ import org.apache.commons.cli.*;
 
 public class Build {
 	static Options options = new Options();
-	public static final int LOG_TIMES = 10;
 	private static String imgPath;
 	private static String outPath = "output.jpg";
 	private static String avgsPath = "avgs/avgs.txt";
@@ -30,6 +29,7 @@ public class Build {
 			e.printStackTrace();
 		}
 
+		assert cmd != null;
 		if (cmd.hasOption("h")) {
 			printHelp();
 		} else {

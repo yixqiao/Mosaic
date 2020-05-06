@@ -9,10 +9,9 @@ import org.apache.commons.cli.*;
 
 public class Averages {
 	static Options options = new Options();
-	public static ArrayList<String> paths = new ArrayList<String>();
+	public static ArrayList<String> paths = new ArrayList<>();
 	public static int imgCount = 0; // 202599
-	public static final int LOG_TIMES = 10;
-	public static String outPath = "avgs/avgs.txt";
+	public static String outPath = "avgs.txt";
 	public static int threadCount = 4;
 
 	
@@ -57,7 +56,7 @@ public class Averages {
 		else
 			System.out.println("No thread count specified, defaulting to " + threadCount + " threads.");
 
-		new CalcAverages(paths, imgCount, threadCount).calcAverages();
+		new CalcAverages(paths, outPath, imgCount, threadCount).calcAverages();
 
 	}
 
@@ -69,7 +68,7 @@ public class Averages {
 
 	private static void getPaths(String rootPath) {
 		Consumer<? super Path> addPath = (s) -> {
-			if (s.toString().endsWith(".jpg"))
+			if (s.toString().endsWith(".jpg") || s.toString().endsWith(".png"))
 				paths.add(s.toString());
 		};
 
