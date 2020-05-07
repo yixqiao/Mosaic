@@ -8,6 +8,7 @@ public class Build {
 	private static int chunkSize = 10;
 	private static int newImgScale = 1;
 	private static int threadCount = 4;
+	public static boolean electron = false;
 
 	public static void gen(String[] args) {
 		options.addOption("h", "help", false, "print this message");
@@ -20,6 +21,7 @@ public class Build {
 		options.addOption("c", "chunk-size", true, "size of each small image in original image");
 		options.addOption("s", "scale", true, "factor to scale output image by");
 		options.addOption("t", "thread-count", true, "thread count for calculating");
+		options.addOption(Option.builder().longOpt("electron-integration").desc("do not use this argument from the terminal").build());
 
 		CommandLineParser parser = new DefaultParser();
 		CommandLine cmd = null;
@@ -65,6 +67,8 @@ public class Build {
 			} else {
 				System.out.println("No thread count specified, defaulting to " + threadCount + " threads.");
 			}
+
+			electron = cmd.hasOption("electron-integration");
 
 			System.out.println();
 

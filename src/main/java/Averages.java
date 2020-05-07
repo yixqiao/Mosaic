@@ -13,6 +13,7 @@ public class Averages {
 	public static int imgCount = 0; // 202599
 	public static String outPath = "avgs.txt";
 	public static int threadCount = 4;
+	public static boolean electron = false;
 
 	
 
@@ -22,6 +23,7 @@ public class Averages {
 		options.addOption("n", "image-num", true, "limit number of images");
 		options.addOption("o", "output-path", true, "path to output averages to");
 		options.addOption("t", "thread-count", true, "thread count for calculating");
+		options.addOption(Option.builder().longOpt("electron-integration").desc("do not use this argument from the terminal").build());
 
 		CommandLineParser parser = new DefaultParser();
 		CommandLine cmd = null;
@@ -55,6 +57,8 @@ public class Averages {
 			threadCount = Integer.parseInt(cmd.getOptionValue("t"));
 		else
 			System.out.println("No thread count specified, defaulting to " + threadCount + " threads.");
+
+		electron = cmd.hasOption("electron-integration");
 
 		new CalcAverages(paths, outPath, imgCount, threadCount).calcAverages();
 

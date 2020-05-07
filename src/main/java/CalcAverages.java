@@ -17,6 +17,7 @@ public class CalcAverages {
 	private int imgCount;
 	private int threadCount;
 	private int[][] averages;
+	private int completed = 0;
 
 	public CalcAverages(ArrayList<String> paths, String outPath, int imgCount, int threadCount) {
 		this.paths = paths;
@@ -55,11 +56,17 @@ public class CalcAverages {
 				averages[imgNum][1] = (int) (g / imgSize);
 				averages[imgNum][2] = (int) (b / imgSize);
 			}
+			synchronized((Integer)completed){
+				completed++;
+			}
 		}
 	}
 
 	public void calcAverages() {
 		long startTime = System.nanoTime();
+
+		if(Averages.electron)
+			System.out.println("total " + imgCount);
 
 		averages = new int[imgCount][3];
 		ExecutorService pool = Executors.newFixedThreadPool(threadCount);
@@ -70,6 +77,17 @@ public class CalcAverages {
 		}
 
 		pool.shutdown();
+
+		while(!pool.isTerminated()){
+			try {
+				TimeUnit.MILLISECONDS.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			synchronized((Integer)completed){
+				System.out.println("completed " + completed);
+			}
+		}
 
 		try {
 			pool.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
