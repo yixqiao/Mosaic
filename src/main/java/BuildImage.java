@@ -38,7 +38,7 @@ public class BuildImage {
         this.avgsPath = avgsPath;
         this.chunkSize = chunkSize;
         this.newImgScale = newImgScale;
-        newChunkSize = chunkSize * newImgScale;
+        this.newChunkSize = chunkSize * newImgScale;
         this.threadCount = threadCount;
 
         try {
@@ -95,7 +95,7 @@ public class BuildImage {
             AffineTransform scale = AffineTransform.getScaleInstance((double) newChunkSize / curImg.getWidth(),
                     (double) newChunkSize / curImg.getHeight());
             AffineTransformOp op = new AffineTransformOp(scale, AffineTransformOp.TYPE_BICUBIC);
-            BufferedImage newCurImg = new BufferedImage(curImg.getWidth(), curImg.getHeight(), curImg.getType());
+            BufferedImage newCurImg = new BufferedImage(newChunkSize, newChunkSize, curImg.getType());
             op.filter(curImg, newCurImg);
 
             for (int x = 0; x < newChunkSize; x++) {
@@ -113,7 +113,8 @@ public class BuildImage {
     public void genImage() {
         long startTime = System.nanoTime();
 
-        newImage = new BufferedImage(image.getWidth() * newImgScale, image.getHeight() * newImgScale, image.getType());
+        newImage = new BufferedImage(image.getWidth() * newImgScale,
+                image.getHeight() * newImgScale, image.getType());
 
         ExecutorService pool = Executors.newFixedThreadPool(threadCount);
 
@@ -129,7 +130,7 @@ public class BuildImage {
 
         pool.shutdown();
 
-        while(!pool.isTerminated()) {
+        while (!pool.isTerminated()) {
             try {
                 TimeUnit.MILLISECONDS.sleep(1);
             } catch (InterruptedException e) {
